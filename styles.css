@@ -99,20 +99,32 @@ body::after {
 
 .arc--trace {
   stroke-opacity: 0.42;
-  stroke-width: 2.1;
+  stroke-width: 3.15;
   stroke-linecap: round;
   stroke-dasharray: 17 83;
-  stroke-dashoffset: 0;
-  /* On load, spin in fast (two quick loops, decelerating), then hand off to
-     the steady slow loop at ~1.3s. Both end/start at the same visual point
-     (offset is a multiple of the 100-unit period) so the handoff is seamless. */
+  stroke-dashoffset: var(--phase, 0);
+  opacity: 0;
+  /* Each segment fades in and sweeps in fast — LESS than one loop, in the
+     SAME direction as the steady loop — then decelerates straight into it.
+     Under a full loop, the dash never wraps during the fast phase, so the
+     quick motion can't strobe/alias into looking like it spins the other way.
+     Staggered per --delay. */
   animation:
-    traceSpin 1.3s cubic-bezier(0.16, 1, 0.3, 1) both,
-    trace var(--dur, 9s) linear 1.3s infinite;
+    traceSpin 1.3s cubic-bezier(0.1, 0.7, 0.35, 0.92) var(--delay, 0s) both,
+    trace var(--dur, 9s) linear calc(var(--delay, 0s) + 1.3s) infinite,
+    traceIn 0.35s ease-out var(--delay, 0s) forwards;
 }
 
-@keyframes traceSpin { to { stroke-dashoffset: -200; } }
-@keyframes trace { to { stroke-dashoffset: -100; } }
+/* Each segment starts at its own --phase, sweeps 0.75 of a loop (no wrap),
+   then the steady loop continues seamlessly (one full loop) from there. The
+   per-arc --phase means they settle at different points around the circle,
+   not clustered at the same progress. */
+@keyframes traceSpin { to { stroke-dashoffset: calc(var(--phase, 0) - 75); } }
+@keyframes trace {
+  from { stroke-dashoffset: calc(var(--phase, 0) - 75); }
+  to { stroke-dashoffset: calc(var(--phase, 0) - 175); }
+}
+@keyframes traceIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- Layout ---------- */
 .page {
