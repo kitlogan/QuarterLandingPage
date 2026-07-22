@@ -40,7 +40,7 @@ Both `WAITLIST` and `REGISTER INTEREST` trigger the same email-capture flow.
 ## 5. Design spec
 
 - **Background:** off-white `#E8E2D6`.
-- **Ink / green:** deep pine green `#1C3A2A` for text, arcs, and the CTA fill.
+- **Ink / green:** dark green `#12190A` for text, arcs, and the CTA fill.
 - **Typography:**
   - Display wordmark + tagline: **TT Ramillas** (high-contrast serif).
   - Small caps / labels (`QTR / MMXXVII`, `WAITLIST`, `ATHLETIC CLUB`, `COMING SOON`, footer): a letter-spaced mono or geometric sans. Pick a free Google Font that matches the design's spaced-caps look (e.g. a mono like Space Mono, or a sans tracked wide).
@@ -85,7 +85,7 @@ The concentric "athletic track" arcs animate subtly to signal craft.
 1. **Email capture** — ✅ MailerLite (free tier; Kit as fallback if >1,000 signups expected).
 2. **Font** — ✅ Build with a free placeholder serif now (Playfair Display or Cormorant), swap in licensed TT Ramillas woff2 later.
 3. **Repo** — ✅ `QuarterLandingPage`, **public**.
-4. **Green hex** — ✅ `#1C3A2A`.
+4. **Green hex** — ✅ `#12190A`.
 5. **Analytics** — ✅ Cloudflare Web Analytics (free, cookieless, views + unique visitors).
 
 ---
