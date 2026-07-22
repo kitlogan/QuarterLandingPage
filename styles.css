@@ -255,20 +255,15 @@ body::after {
 }
 
 .photo {
-  --rot: 0deg;
   position: absolute;
-  width: clamp(88px, 12vw, 150px);
-  transform: rotate(var(--rot));
-  filter: drop-shadow(0 9px 18px rgba(18, 25, 10, 0.28));
+  width: clamp(104px, 14vw, 180px);
+  filter: drop-shadow(0 9px 20px rgba(18, 25, 10, 0.26));
 }
 
 .photo__card {
   --dur: 11s;
   --delay: 0s;
   margin: 0;
-  padding: 6px 6px 13px;   /* white frame, a touch deeper at the base */
-  background: #fbfaf6;
-  border-radius: 2px;
   opacity: 0;
   will-change: clip-path, transform, opacity;
   animation: printPop var(--dur) cubic-bezier(0.22, 0.61, 0.36, 1) var(--delay) infinite;
@@ -278,7 +273,7 @@ body::after {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 1px;
+  border-radius: 2px;
 }
 
 @keyframes printPop {
@@ -292,30 +287,30 @@ body::after {
 }
 
 /* placement · size · tilt · timing (staggered so they feel random) */
-.photo--1 { top: 13%; left: 5%; width: clamp(96px, 12vw, 152px); --rot: -4deg; }
+.photo--1 { top: 13%; left: 5%; width: clamp(116px, 14vw, 182px); }
 .photo--1 .photo__card { --dur: 11s; --delay: 0.6s; }
 
-.photo--2 { top: 19%; right: 6%; width: clamp(84px, 10vw, 122px); --rot: 3deg; }
+.photo--2 { top: 19%; right: 6%; width: clamp(100px, 12vw, 148px); }
 .photo--2 .photo__card { --dur: 13s; --delay: 4.2s; }
 
-.photo--3 { top: 55%; left: 6%; width: clamp(104px, 13vw, 168px); --rot: 3deg; }
+.photo--3 { top: 55%; left: 6%; width: clamp(124px, 15vw, 200px); }
 .photo--3 .photo__card { --dur: 10s; --delay: 7.6s; }
 
-.photo--4 { top: 60%; right: 6%; width: clamp(84px, 10vw, 120px); --rot: -3deg; }
+.photo--4 { top: 60%; right: 6%; width: clamp(100px, 12vw, 146px); }
 .photo--4 .photo__card { --dur: 12.5s; --delay: 2.4s; }
 
-.photo--5 { top: 39%; left: 15%; width: clamp(78px, 9vw, 104px); --rot: 5deg; }
+.photo--5 { top: 39%; left: 15%; width: clamp(92px, 11vw, 126px); }
 .photo--5 .photo__card { --dur: 14s; --delay: 9.3s; }
 
 /* On phones re-scatter the photos into the roomy top band and just below the
    CTA, clear of the centred wordmark/tagline/CTA. (Placed after the base
    .photo--N rules so it actually wins the cascade.) */
 @media (max-width: 640px) {
-  .photo--1 { top: 7%; left: 5%; width: 118px; }
-  .photo--2 { top: 12%; right: 6%; width: 100px; }
-  .photo--5 { top: 23%; left: 33%; width: 88px; }
-  .photo--3 { top: 74%; left: 5%; width: 108px; }
-  .photo--4 { top: 75%; right: 6%; width: 96px; }
+  .photo--1 { top: 7%; left: 5%; width: 140px; }
+  .photo--2 { top: 12%; right: 6%; width: 120px; }
+  .photo--5 { top: 22%; left: 34%; width: 104px; }
+  .photo--3 { top: 75%; left: 5%; width: 128px; }
+  .photo--4 { top: 76%; right: 6%; width: 112px; }
 }
 
 /* ---------- Reduced motion ---------- */
