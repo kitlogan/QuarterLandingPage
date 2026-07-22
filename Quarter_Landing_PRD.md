@@ -57,13 +57,13 @@ The concentric "athletic track" arcs animate subtly to signal craft.
 
 ## 6. Functional requirements — email capture
 
-**Decision: MailerLite.** Because the site is static (GitHub Pages), there's no server to receive form posts, so email capture goes through a third-party service. MailerLite's free tier covers up to 1,000 subscribers / 12,000 sends per month, gives good design control over its embedded form (to match the aesthetic), and upgrades cheaply ($10/mo) if the list grows. *(Mailchimp's free plan is now only 250 contacts / 500 sends with no automation — too small for a launch waitlist. Kit is the alternative if we expect >1,000 signups before launch, free to 10,000.)*
+**Decision: Mailchimp.** Kit already has a Mailchimp account ready, so the waitlist lands in an existing, familiar tool with no new vendor onboarding. Because the site is static (GitHub Pages), there's no server to receive form posts, so email capture goes through Mailchimp's hosted/embedded form. Mailchimp's free tier covers a pre-launch waitlist and upgrades cheaply if the list outgrows it.
 
 **Implementation:**
-- Create a MailerLite account + a "Quarter Waitlist" group/form.
-- Embed as a styled inline form or small modal, triggered by both `WAITLIST` and `REGISTER INTEREST`.
+- In Mailchimp, create or reuse an audience for the launch waitlist (e.g. a "Quarter Waitlist" audience, or a tag/group within Kit's existing audience).
+- Embed Mailchimp's form as a styled inline form or small modal, triggered by both `WAITLIST` and `REGISTER INTEREST`. Post directly to Mailchimp's embedded-form endpoint so no backend is needed.
 - Email validation, success + error states, keyboard/focus accessibility.
-- Style the form to match the design (green CTA, off-white field, Ramillas/placeholder type) rather than using MailerLite's default styling.
+- Style the form to match the design (green CTA, off-white field, Ramillas/placeholder type) rather than using Mailchimp's default styling.
 
 ## 7. Technical requirements
 
@@ -82,7 +82,7 @@ The concentric "athletic track" arcs animate subtly to signal craft.
 
 ## 9. Decisions (all resolved)
 
-1. **Email capture** — ✅ MailerLite (free tier; Kit as fallback if >1,000 signups expected).
+1. **Email capture** — ✅ Mailchimp (Kit's account is ready; "Quarter Waitlist" audience/tag).
 2. **Font** — ✅ Build with a free placeholder serif now (Playfair Display or Cormorant), swap in licensed TT Ramillas woff2 later.
 3. **Repo** — ✅ `QuarterLandingPage`, **public**.
 4. **Green hex** — ✅ `#12190A`.
@@ -108,10 +108,10 @@ Structured so each sprint is a self-contained prompt you can hand to Claude Code
 - Fully responsive; verify on mobile widths.
 - **Done when:** page visually matches the design on desktop + mobile, arcs animate subtly, no form logic yet.
 
-### Sprint 2 — Email capture (MailerLite)
-- Integrate the MailerLite embedded form as a styled inline form or modal, triggered by both `WAITLIST` and `REGISTER INTEREST`.
-- Restyle to match the design (don't ship MailerLite's default look); email validation, success + error states, keyboard/focus accessibility.
-- **Done when:** a real email submission lands in the MailerLite "Quarter Waitlist" group and the user sees a success state.
+### Sprint 2 — Email capture (Mailchimp)
+- Integrate the Mailchimp embedded form as a styled inline form or modal, triggered by both `WAITLIST` and `REGISTER INTEREST`.
+- Restyle to match the design (don't ship Mailchimp's default look); email validation, success + error states, keyboard/focus accessibility.
+- **Done when:** a real email submission lands in the Mailchimp "Quarter Waitlist" audience and the user sees a success state.
 
 ### Sprint 3 — Domain, polish & launch QA
 - Add `CNAME`, configure GoDaddy DNS, enable Enforce HTTPS.
