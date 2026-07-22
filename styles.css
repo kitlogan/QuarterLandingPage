@@ -71,10 +71,10 @@ body::after {
   pointer-events: none;
 }
 
-/* Draw-on: a one-time radial reveal sweeping out from each bottom corner
-   (concentric with the arcs). Robust — it can never leave a gap in a line. */
-.arcs--left { left: 0; animation: revealLeft 1.4s ease-out both; }
-.arcs--right { right: 0; animation: revealRight 1.4s ease-out both; }
+/* Arcs are present on load — no draw-on. The entrance lives on the tracer
+   segments (they spin in fast, then settle), see .arc--trace. */
+.arcs--left { left: 0; }
+.arcs--right { right: 0; }
 
 /* On phones keep each arc group small and firmly in its own corner, with a
    wide open gap down the centre — no crossing, no crosshatch. */
@@ -99,26 +99,20 @@ body::after {
 
 .arc--trace {
   stroke-opacity: 0.42;
-  stroke-width: 1.6;
+  stroke-width: 2.1;
   stroke-linecap: round;
-  stroke-dasharray: 11 89;
+  stroke-dasharray: 17 83;
   stroke-dashoffset: 0;
-  opacity: 0;
+  /* On load, spin in fast (two quick loops, decelerating), then hand off to
+     the steady slow loop at ~1.3s. Both end/start at the same visual point
+     (offset is a multiple of the 100-unit period) so the handoff is seamless. */
   animation:
-    trace var(--dur, 9s) linear var(--delay, 2s) infinite,
-    traceIn 0.7s ease-out var(--delay, 2s) forwards;
+    traceSpin 1.3s cubic-bezier(0.16, 1, 0.3, 1) both,
+    trace var(--dur, 9s) linear 1.3s infinite;
 }
 
-@keyframes revealLeft {
-  from { clip-path: circle(0% at 0% 100%); }
-  to { clip-path: circle(160% at 0% 100%); }
-}
-@keyframes revealRight {
-  from { clip-path: circle(0% at 100% 100%); }
-  to { clip-path: circle(160% at 100% 100%); }
-}
+@keyframes traceSpin { to { stroke-dashoffset: -200; } }
 @keyframes trace { to { stroke-dashoffset: -100; } }
-@keyframes traceIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- Layout ---------- */
 .page {
@@ -315,11 +309,6 @@ body::after {
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .arcs--left,
-  .arcs--right {
-    animation: none;
-    clip-path: none;
-  }
   .arc--trace { display: none; }
   .photos { display: none; }
   .cta { transition: none; }
