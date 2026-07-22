@@ -14,3 +14,6 @@ dist/
 
 # Logs
 *.log
+
+# Heavy source photos — only the optimised Images/*.jpg are committed/served
+Images/*.png
