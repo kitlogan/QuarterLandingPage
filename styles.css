@@ -1,5 +1,5 @@
 :root {
-  --paper: #e8e2d6;       /* PRD off-white */
+  --paper: #f2eee4;       /* lighter warm off-white (design base was #e8e2d6) */
   --ink: #12190a;         /* PRD dark green ink */
 
   --serif: "Playfair Display", Georgia, "Times New Roman", serif;
@@ -62,17 +62,23 @@ body::after {
   position: fixed;
   bottom: 0;
   z-index: 1;
-  /* Scale with the viewport so the outer arc sweeps ~42% up the side edges on
-     any desktop (matching the design). The 44vw term is below half the
-     viewport, so the two corner groups can never meet/cross at the bottom
-     centre on narrow phones; the cap keeps very large monitors sane. */
-  width: clamp(150px, min(51vh, 44vw), 900px);
+  /* Big enough to sweep well up the side edges on desktop. The 48vw term is
+     under half the viewport, so the left and right groups can NEVER meet at
+     the bottom centre; 88vh drives the reach on tall/wide screens; the cap
+     keeps very large monitors sane. Mobile is overridden below. */
+  width: clamp(140px, min(88vh, 48vw), 1100px);
   aspect-ratio: 1;
   pointer-events: none;
 }
 
 .arcs--left { left: 0; }
 .arcs--right { right: 0; }
+
+/* On phones keep each arc group small and firmly in its own corner, with a
+   wide open gap down the centre — no crossing, no crosshatch. */
+@media (max-width: 640px) {
+  .arcs { width: 40vw; }
+}
 
 .arc {
   fill: none;
@@ -160,21 +166,21 @@ body::after {
 .wordmark {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(2.4rem, 9vw, 7.25rem);
+  font-size: clamp(2.3rem, 8.2vw, 6.5rem);
   line-height: 1;
-  letter-spacing: clamp(2px, 0.62vw, 10px);
+  letter-spacing: clamp(2px, 0.6vw, 9px);
   text-transform: uppercase;
 }
 
 .subwordmark {
   font-family: var(--caps);
   font-weight: 500;
-  font-size: clamp(0.82rem, 1.55vw, 1.35rem);
-  letter-spacing: 0.42em;
+  font-size: clamp(1rem, 2.05vw, 1.7rem);
+  letter-spacing: 0.4em;
   text-transform: uppercase;
   margin-top: clamp(10px, 1.4vw, 20px);
   /* letter-spacing pushes the block right; nudge it back to optical centre */
-  text-indent: 0.42em;
+  text-indent: 0.4em;
 }
 
 .status {
