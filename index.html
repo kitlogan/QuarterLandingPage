@@ -3,12 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quarter</title>
+  <title>The Quarter Athletic Club — Coming Soon</title>
+  <meta name="description" content="The Quarter Athletic Club — a human-coaching-led performance club for the everyday athlete. Coming soon. Join the waitlist.">
+  <meta name="theme-color" content="#e8e2d6">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main>
-    <h1>hello</h1>
-  </main>
+  <!-- Decorative concentric arcs: bottom-left -->
+  <svg class="arcs arcs--left" viewBox="0 0 500 500" aria-hidden="true" preserveAspectRatio="xMinYMax meet">
+    <path class="arc arc--base" pathLength="100" style="--draw-delay:.10s" d="M120,500 A120,120 0 0,0 0,380"></path>
+    <path class="arc arc--base" pathLength="100" style="--draw-delay:.25s" d="M218,500 A218,218 0 0,0 0,282"></path>
+    <path class="arc arc--base" pathLength="100" style="--draw-delay:.40s" d="M315,500 A315,315 0 0,0 0,185"></path>
+    <path class="arc arc--base" pathLength="100" style="--draw-delay:.55s" d="M410,500 A410,410 0 0,0 0,90"></path>
+    <path class="arc arc--trace" pathLength="100" style="--dur:7.0s;--delay:1.9s" d="M120,500 A120,120 0 0,0 0,380"></path>
+    <path class="arc arc--trace" pathLength="100" style="--dur:9.5s;--delay:2.5s" d="M218,500 A218,218 0 0,0 0,282"></path>
+    <path class="arc arc--trace" pathLength="100" style="--dur:8.0s;--delay:2.1s" d="M315,500 A315,315 0 0,0 0,185"></path>
+    <path class="arc arc--trace" pathLength="100" style="--dur:11s;--delay:3.0s" d="M410,500 A410,410 0 0,0 0,90"></path>
+  </svg>
+
+  <!-- Decorative concentric arcs: bottom-right -->
+  <svg class="arcs arcs--right" viewBox="0 0 500 500" aria-hidden="true" preserveAspectRatio="xMaxYMax meet">
+    <path class="arc arc--base" pathLength="100" style="--draw-delay:.15s" d="M380,500 A120,120 0 0,1 500,380"></path>
+    <path class="arc arc--base" pathLength="100" style="--draw-delay:.30s" d="M282,500 A218,218 0 0,1 500,282"></path>
+    <path class="arc arc--base" pathLength="100" style="--draw-delay:.45s" d="M185,500 A315,315 0 0,1 500,185"></path>
+    <path class="arc arc--base" pathLength="100" style="--draw-delay:.60s" d="M90,500 A410,410 0 0,1 500,90"></path>
+    <path class="arc arc--trace" pathLength="100" style="--dur:8.5s;--delay:2.6s" d="M380,500 A120,120 0 0,1 500,380"></path>
+    <path class="arc arc--trace" pathLength="100" style="--dur:7.5s;--delay:2.2s" d="M282,500 A218,218 0 0,1 500,282"></path>
+    <path class="arc arc--trace" pathLength="100" style="--dur:10.5s;--delay:3.2s" d="M185,500 A315,315 0 0,1 500,185"></path>
+    <path class="arc arc--trace" pathLength="100" style="--dur:9.0s;--delay:2.3s" d="M90,500 A410,410 0 0,1 500,90"></path>
+  </svg>
+
+  <div class="page">
+    <header class="topbar">
+      <span class="label">QTR&nbsp;/&nbsp;MMXXVII</span>
+      <button class="label label--link" type="button">WAITLIST</button>
+    </header>
+
+    <main class="hero">
+      <h1 class="wordmark">THE&nbsp;QUARTER</h1>
+      <p class="subwordmark">Athletic&nbsp;Club</p>
+      <span class="status">Coming&nbsp;Soon</span>
+      <p class="tagline">For The Everyday Athlete.</p>
+      <button class="cta" type="button">Register&nbsp;Interest</button>
+    </main>
+
+    <footer class="footer">
+      <span class="label">© The Quarter Athletic Club</span>
+    </footer>
+  </div>
 </body>
 </html>
