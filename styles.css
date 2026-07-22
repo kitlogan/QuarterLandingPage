@@ -2,7 +2,7 @@
   --paper: #f2eee4;       /* lighter warm off-white (design base was #e8e2d6) */
   --ink: #12190a;         /* PRD dark green ink */
 
-  --serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --serif: "Prata", Georgia, "Times New Roman", serif;
   --caps: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   --pad-x: clamp(20px, 4.5vw, 60px);
@@ -175,10 +175,10 @@ body::after {
 
 .wordmark {
   font-family: var(--serif);
-  font-weight: 500;
-  font-size: clamp(2.3rem, 8.2vw, 6.5rem);
+  font-weight: 400;
+  font-size: clamp(2rem, 7.4vw, 5.85rem);
   line-height: 1;
-  letter-spacing: clamp(2px, 0.6vw, 9px);
+  letter-spacing: clamp(1.5px, 0.5vw, 7px);
   text-transform: uppercase;
 }
 
