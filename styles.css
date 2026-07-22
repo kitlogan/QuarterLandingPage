@@ -319,9 +319,232 @@ body::after {
   .photo--4 { top: 76%; right: 6%; width: 112px; }
 }
 
+/* ---------- Waitlist modal ---------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 40px);
+}
+
+.modal[hidden] { display: none; }
+
+.modal__scrim {
+  position: absolute;
+  inset: 0;
+  /* Alpha + blur tuned so the dark background CTA can't peek out below the card
+     on short (~720px) laptop viewports. */
+  background: rgba(12, 17, 6, 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  animation: modalFade 0.28s ease both;
+}
+
+.modal__dialog {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90dvh;
+  overflow: auto;
+  background: var(--paper);
+  border: 1px solid rgba(18, 25, 10, 0.14);
+  border-radius: 8px;
+  padding: clamp(30px, 5vw, 52px) clamp(24px, 4.5vw, 46px) clamp(28px, 4.5vw, 44px);
+  text-align: center;
+  box-shadow: 0 40px 80px -24px rgba(12, 17, 6, 0.55);
+  animation: modalRise 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.modal__close {
+  position: absolute;
+  top: clamp(12px, 2vw, 18px);
+  right: clamp(12px, 2vw, 18px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0.55;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.modal__close:hover { opacity: 1; background: rgba(18, 25, 10, 0.06); }
+
+.modal__eyebrow {
+  display: block;
+  opacity: 0.62;
+  margin-bottom: clamp(14px, 2.4vw, 20px);
+}
+
+.modal__title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 4.8vw, 2.35rem);
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+}
+
+.modal__desc {
+  font-family: var(--serif);
+  font-size: clamp(0.98rem, 2.4vw, 1.12rem);
+  line-height: 1.5;
+  color: rgba(18, 25, 10, 0.78);
+  margin-top: clamp(10px, 1.8vw, 16px);
+  max-width: 34ch;
+  margin-inline: auto;
+}
+
+.wl-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(22px, 3.4vw, 30px);
+}
+
+/* First + Last name sit side by side, and stack on very narrow modals. */
+.wl-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1.4vw, 12px);
+  margin-bottom: clamp(10px, 1.6vw, 13px);
+}
+
+.wl-field {
+  flex: 1 1 130px;
+  min-width: 0;
+}
+
+.wl-input {
+  width: 100%;
+  font-family: var(--caps);
+  font-size: 1rem; /* >=16px so iOS Safari doesn't zoom on focus */
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-align: left;
+  background: #fbf9f4;
+  border: 1px solid rgba(18, 25, 10, 0.28);
+  border-radius: 999px;
+  padding: clamp(14px, 1.8vw, 17px) clamp(22px, 3vw, 28px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hidden iframe that receives the Mailchimp POST response (cross-origin, unread). */
+.wl-sink {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 0;
+  visibility: hidden;
+}
+
+.wl-input::placeholder { color: rgba(18, 25, 10, 0.6); }
+
+.wl-input:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(18, 25, 10, 0.14);
+}
+
+.modal .wl-input:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.wl-input[aria-invalid="true"] {
+  border-color: #8a3b1e;
+  box-shadow: 0 0 0 3px rgba(138, 59, 30, 0.14);
+}
+
+.wl-submit {
+  width: 100%;
+  margin-top: clamp(12px, 1.8vw, 16px);
+}
+
+.wl-submit[disabled] {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+  box-shadow: 0 14px 34px -12px rgba(18, 25, 10, 0.4);
+}
+
+.wl-submit[disabled]:hover { transform: none; }
+
+.wl-msg {
+  min-height: 1.2em;
+  font-family: var(--caps);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  margin-top: 14px;
+  color: rgba(18, 25, 10, 0.7);
+}
+
+.wl-msg.is-error { color: #8a3b1e; }
+.wl-msg.is-ok { color: var(--ink); }
+.wl-msg:empty { margin-top: 0; }
+
+/* Keyboard focus rings (buttons) */
+.modal .cta:focus-visible,
+.modal__close:focus-visible,
+.label--link:focus-visible,
+.cta:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* Success view */
+.wl-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 999px;
+  margin-bottom: clamp(16px, 2.6vw, 22px);
+}
+
+[data-view="success"] .modal__title:focus { outline: none; }
+
+.wl-done {
+  margin-top: clamp(22px, 3.4vw, 30px);
+  min-width: 160px;
+}
+
+@keyframes modalFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalRise {
+  from { opacity: 0; transform: translateY(14px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   .arc--trace { display: none; }
   .photos { display: none; }
   .cta { transition: none; }
+  .modal__scrim,
+  .modal__dialog { animation: none; }
 }
