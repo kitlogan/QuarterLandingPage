@@ -336,3 +336,66 @@ const MAILCHIMP_DOUBLE_OPTIN = false;
     }
   });
 })();
+
+/* Hero photo cycle
+ * ----------------
+ * The single square slot (.hero-media) cycles through its .hero-photo images, one
+ * at a time. Each photo prints straight into the next: the incoming photo is
+ * raised above the current one and prints up from the bottom edge (a CSS clip-path
+ * transition, see styles.css) OVER it. The current photo stays fully shown
+ * underneath until it's covered, so the print movement is kept but the square is
+ * never empty — no retract, no blank frame. Once the incoming photo has fully
+ * covered the square, the outgoing one is hidden instantly behind it (no visible
+ * retract) and z-indexes settle, ready for the next print. This timer only toggles
+ * a class and a z-index, so there's no per-frame JS. Honours prefers-reduced-motion
+ * by not cycling at all (CSS shows the first photo statically).
+ */
+(function () {
+  "use strict";
+
+  // --- tunable timings ---
+  var PRINT = 900; // ms: how long a photo takes to print up over the previous one
+  var HOLD = 2600; // ms: how long a photo stays before the next prints in over it
+
+  var media = document.querySelector(".hero-media");
+  if (!media) return;
+  var photos = media.querySelectorAll(".hero-photo");
+  if (photos.length < 2) return; // nothing to cycle
+
+  // Respect reduced motion — show the first photo statically, don't cycle.
+  var mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (mq && mq.matches) return;
+
+  // Keep the CSS transition duration locked to PRINT (custom prop inherits down).
+  media.style.setProperty("--print", PRINT + "ms");
+  // Take over from the CSS "show first photo" default; now .is-in drives it.
+  // Two z-index layers: the current photo sits at 1, each incoming rises to 2 to
+  // print over it, then settles to 1 as the new current while the outgoing drops
+  // to 0 (its retract stays hidden behind the incoming). Everything else rests at
+  // 0 — all below the vignette (2) and cream clip (3), which live in a separate
+  // stacking layer above the photos.
+  var i = 0;
+  photos[i].classList.add("is-in");
+  photos[i].style.zIndex = "1";
+  media.classList.add("is-cycling");
+
+  function tick() {
+    var prev = i;
+    var next = (i + 1) % photos.length;
+    // Raise the incoming photo above the current one and print it up over the top.
+    photos[next].style.zIndex = "2";
+    photos[next].classList.add("is-in");
+    i = next;
+    setTimeout(function () {
+      // Incoming now fully covers the square. Retract the outgoing photo behind it
+      // (occluded, so unseen) and settle the incoming into the current layer, ready
+      // for the next photo to print above it.
+      photos[prev].classList.remove("is-in");
+      photos[prev].style.zIndex = "0";
+      photos[next].style.zIndex = "1";
+      setTimeout(tick, HOLD);
+    }, PRINT);
+  }
+
+  setTimeout(tick, HOLD);
+})();

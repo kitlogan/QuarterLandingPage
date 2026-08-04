@@ -179,24 +179,140 @@ body::after {
 
 .label--link:hover { opacity: 0.6; }
 
-.wordmark {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(2rem, 7.4vw, 5.85rem);
-  line-height: 1;
-  letter-spacing: clamp(1.5px, 0.5vw, 7px);
-  text-transform: uppercase;
+/* ---------- Hero stage: square photo + two-tone QUARTER ---------- */
+/* Layout: THE (small caps, above) · the square photo slot with QUARTER
+   straddling it · ATHLETIC CLUB (small caps, below). The square and the base
+   wordmark share grid-row 2, both centred, so they sit on one common centre;
+   the cream clip copy is centred inside the square on that same point, so the
+   two QUARTER copies align pixel-for-pixel. overflow:hidden on the square clips
+   the cream copy to the photo, revealing the green base for the overhanging
+   Q and R — the Darcy two-tone. */
+.hero-stage {
+  display: grid;
+  grid-template-columns: auto; /* one column: THE / [square+QUARTER] / CLUB */
+  justify-items: center;
+  align-items: center;
+  row-gap: clamp(10px, 1.6vw, 20px);
+  position: relative;
+  isolation: isolate; /* contain the base/clip z-index battle */
+  /* The square is the responsive driver; the QUARTER font-size is derived from
+     it so that exactly "UARTE" spans the image at every width (Q & R overhang).
+     --uarte is the measured ratio: width of "UARTE" ÷ font-size at 0.05em
+     tracking = 3.876. Keep letter-spacing in em (below) so the ratio is
+     scale-invariant. --wm-shift re-centres UARTE in the square, since Q is a
+     wider glyph than the trailing R. */
+  --img: clamp(180px, 32vw, 420px);
+  --uarte: 3.876;
+  --wm-shift: -0.0675em;
 }
 
-.subwordmark {
+/* THE / ATHLETIC CLUB — small caps, ink green, above and below the square. */
+.wordmark-the,
+.wordmark-club {
   font-family: var(--caps);
   font-weight: 500;
-  font-size: clamp(1rem, 2.05vw, 1.7rem);
+  font-size: clamp(0.85rem, 1.8vw, 1.45rem);
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  margin-top: clamp(10px, 1.4vw, 20px);
-  /* letter-spacing pushes the block right; nudge it back to optical centre */
-  text-indent: 0.4em;
+  color: var(--ink);
+  text-indent: 0.4em; /* offset the trailing letter-spacing back to centre */
+}
+.wordmark-the { grid-area: 1 / 1; }
+.wordmark-club { grid-area: 3 / 1; }
+
+/* The square photo slot. Higher z-index than the base wordmark so its cream
+   clip child paints over the green base within the square. */
+.hero-media {
+  grid-area: 2 / 1; /* same cell as the base wordmark → shared centre */
+  position: relative;
+  z-index: 2;
+  width: var(--img); /* QUARTER font-size is derived from this (see .hero-stage) */
+  aspect-ratio: 1;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+/* A very subtle, centre-weighted dark vignette over the photo but BEHIND the
+   cream letters (z-index between the photos and .wordmark-clip). Lifts the cream
+   two-tone off bright/busy frames without muddying the photo's corners. */
+.hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    115% 82% at 50% 50%,
+    rgba(10, 14, 5, 0.34) 0%,
+    rgba(10, 14, 5, 0.16) 52%,
+    rgba(10, 14, 5, 0) 82%
+  );
+}
+
+/* Photos stack in the square; one is shown at a time and each prints straight
+   into the next: the incoming photo is raised above the current one and prints
+   up from the bottom edge (clip-path inset(100%)→inset(0)) OVER it, so the square
+   is always full — the print movement stays, but there's no retract-to-empty and
+   no blank frame. script.js raises the incoming photo and adds .is-in, then hides
+   the covered outgoing one. --print is set from script.js so the JS timing and the
+   CSS transition stay in sync. z-index 0 keeps photos below the vignette (2) and
+   the cream clip (3); script.js lifts only the incoming photo to z-index 1. */
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  clip-path: inset(100% 0 0 0); /* hidden: collapsed to the bottom edge */
+  will-change: clip-path;
+  transition: clip-path var(--print, 900ms) cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Before JS runs (or if JS is disabled) show the first photo statically, so the
+   square is never blank. Once script.js takes over it adds .is-cycling here. */
+.hero-media:not(.is-cycling) .hero-photo:first-child { clip-path: inset(0 0 0 0); }
+
+/* A photo that's printed in (the settled current one, plus the incoming one mid-
+   print, which script.js raises above it). */
+.hero-photo.is-in { clip-path: inset(0 0 0 0); }
+
+/* QUARTER — shared typography for both copies so they align exactly. The size is
+   derived from the square (--img) so that "UARTE" spans the image at every width;
+   letter-spacing is in em so that ratio holds at all sizes. */
+.wordmark,
+.wordmark-clip {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: calc(var(--img) / var(--uarte));
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Base (green) copy — shares the square's grid cell, so it is vertically
+   centred on the image and, being wider than the square, its Q & R overhang. */
+.wordmark {
+  grid-area: 2 / 1; /* same cell as the square → Q & R overhang its edges */
+  position: relative;
+  z-index: 1;
+  color: var(--ink);
+  transform: translateX(var(--wm-shift)); /* re-centre UARTE in the square */
+}
+
+/* Cream copy — centred on the square's centre (= the base copy's centre).
+   z-index 3 keeps it above both the photos and the vignette scrim. The same
+   --wm-shift is applied here so it stays pixel-aligned with the base copy. */
+.wordmark-clip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateX(var(--wm-shift));
+  z-index: 3;
+  color: var(--paper);
+  pointer-events: none;
 }
 
 .status {
@@ -246,78 +362,6 @@ body::after {
 }
 
 .cta:active { transform: translateY(0); }
-
-/* ---------- Background Polaroid photos ---------- */
-/* They "print" up from their bottom edge, hold ~1s, then retract the same way,
-   scattered at apparently-random spots. The shadow lives on the OUTER element
-   (via filter: drop-shadow) so it reveals with the clip-path'd inner card
-   instead of being clipped away. */
-.photos {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.photo {
-  position: absolute;
-  width: clamp(104px, 14vw, 180px);
-  filter: drop-shadow(0 9px 20px rgba(18, 25, 10, 0.26));
-}
-
-.photo__card {
-  --dur: 11s;
-  --delay: 0s;
-  margin: 0;
-  opacity: 0;
-  will-change: clip-path, transform, opacity;
-  animation: printPop var(--dur) cubic-bezier(0.22, 0.61, 0.36, 1) var(--delay) infinite;
-}
-
-.photo__card img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 2px;
-}
-
-@keyframes printPop {
-  0% { clip-path: inset(100% 0 0 0); opacity: 0; transform: translateY(6px); }
-  2% { opacity: 1; }
-  8% { clip-path: inset(0 0 0 0); opacity: 1; transform: translateY(0); }
-  20% { clip-path: inset(0 0 0 0); opacity: 1; transform: translateY(0); }
-  27% { clip-path: inset(100% 0 0 0); opacity: 1; transform: translateY(6px); }
-  29% { opacity: 0; }
-  100% { clip-path: inset(100% 0 0 0); opacity: 0; transform: translateY(6px); }
-}
-
-/* placement · size · tilt · timing (staggered so they feel random) */
-.photo--1 { top: 13%; left: 5%; width: clamp(116px, 14vw, 182px); }
-.photo--1 .photo__card { --dur: 11s; --delay: 0.6s; }
-
-.photo--2 { top: 19%; right: 6%; width: clamp(100px, 12vw, 148px); }
-.photo--2 .photo__card { --dur: 13s; --delay: 4.2s; }
-
-.photo--3 { top: 55%; left: 6%; width: clamp(124px, 15vw, 200px); }
-.photo--3 .photo__card { --dur: 10s; --delay: 7.6s; }
-
-.photo--4 { top: 60%; right: 6%; width: clamp(100px, 12vw, 146px); }
-.photo--4 .photo__card { --dur: 12.5s; --delay: 2.4s; }
-
-.photo--5 { top: 39%; left: 15%; width: clamp(92px, 11vw, 126px); }
-.photo--5 .photo__card { --dur: 14s; --delay: 9.3s; }
-
-/* On phones re-scatter the photos into the roomy top band and just below the
-   CTA, clear of the centred wordmark/tagline/CTA. (Placed after the base
-   .photo--N rules so it actually wins the cascade.) */
-@media (max-width: 640px) {
-  .photo--1 { top: 7%; left: 5%; width: 140px; }
-  .photo--2 { top: 12%; right: 6%; width: 120px; }
-  .photo--5 { top: 22%; left: 34%; width: 104px; }
-  .photo--3 { top: 75%; left: 5%; width: 128px; }
-  .photo--4 { top: 76%; right: 6%; width: 112px; }
-}
 
 /* ---------- Waitlist modal ---------- */
 .visually-hidden {
@@ -543,8 +587,12 @@ body::after {
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   .arc--trace { display: none; }
-  .photos { display: none; }
   .cta { transition: none; }
   .modal__scrim,
   .modal__dialog { animation: none; }
+  /* Don't cycle the hero photos — show only the first, statically. (script.js
+     also bails out of the cycle under this query.) */
+  .hero-photo { transition: none; }
+  .hero-media .hero-photo:first-child { clip-path: inset(0 0 0 0); }
+  .hero-media .hero-photo:not(:first-child) { clip-path: inset(100% 0 0 0); }
 }
