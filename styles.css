@@ -150,9 +150,9 @@ body::after {
   align-items: center;
   justify-content: center;
   text-align: center;
-  /* Bias the block slightly below dead-centre, as in the design, so the CTA
-     lands near ~75% of height rather than a void opening below it. */
-  padding-top: clamp(0px, 8vh, 84px);
+  /* A small downward bias, kept modest so it doesn't eat vertical room on short
+     desktop viewports (it used to be up to 84px and pushed the CTA off-screen). */
+  padding-top: clamp(0px, 2.5vh, 28px);
 }
 
 .footer {
@@ -201,7 +201,10 @@ body::after {
      tracking = 3.876. Keep letter-spacing in em (below) so the ratio is
      scale-invariant. --wm-shift re-centres UARTE in the square, since Q is a
      wider glyph than the trailing R. */
-  --img: clamp(180px, 32vw, 420px);
+  /* min(32vw, 40vh) so the square (and the derived QUARTER size) shrink on short
+     desktop viewports and the CTA/footer never get pushed off — the page is a
+     fixed single screen (body overflow:hidden), so it must fit, not scroll. */
+  --img: clamp(180px, min(32vw, 40vh), 420px);
   --uarte: 3.876;
   --wm-shift: -0.0675em;
 }
@@ -326,7 +329,7 @@ body::after {
   border: 1px solid rgba(18, 25, 10, 0.55);
   border-radius: 999px;
   padding: 0.72em 1.5em;
-  margin-top: clamp(28px, 4.4vh, 54px);
+  margin-top: clamp(16px, 3.2vh, 40px);
 }
 
 .tagline {
@@ -334,7 +337,7 @@ body::after {
   font-weight: 400;
   font-size: clamp(1.35rem, 2.7vw, 2.2rem);
   letter-spacing: 0.005em;
-  margin-top: clamp(30px, 5vh, 66px);
+  margin-top: clamp(18px, 3.8vh, 48px);
 }
 
 .cta {
@@ -349,7 +352,7 @@ body::after {
   border: 0;
   border-radius: 999px;
   padding: clamp(16px, 1.8vw, 22px) clamp(36px, 3.8vw, 58px);
-  margin-top: clamp(26px, 4.2vh, 50px);
+  margin-top: clamp(16px, 3vh, 36px);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   box-shadow: 0 14px 34px -12px rgba(18, 25, 10, 0.55);
