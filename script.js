@@ -1,4 +1,4 @@
-/* The Quarter Athletic Club — waitlist capture
+/* The Quarter Athletics Club — waitlist capture
  * ---------------------------------------------
  * Static site, no backend. We submit the form straight to Mailchimp with a real
  * POST into a hidden <iframe>, so the visitor stays on our own styled page.
