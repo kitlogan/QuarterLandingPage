@@ -57,75 +57,6 @@ body::after {
     linear-gradient(180deg, transparent calc(50% - 0.5px), rgba(18, 25, 10, 0.13) calc(50% - 0.5px), rgba(18, 25, 10, 0.13) calc(50% + 0.5px), transparent calc(50% + 0.5px));
 }
 
-/* ---------- Decorative arcs ---------- */
-.arcs {
-  position: fixed;
-  bottom: 0;
-  z-index: 1;
-  /* Big enough to sweep well up the side edges on desktop. The 48vw term is
-     under half the viewport, so the left and right groups can NEVER meet at
-     the bottom centre; 88vh drives the reach on tall/wide screens; the cap
-     keeps very large monitors sane. Mobile is overridden below. */
-  width: clamp(140px, min(88vh, 48vw), 1100px);
-  aspect-ratio: 1;
-  pointer-events: none;
-}
-
-/* Arcs are present on load — no draw-on. The entrance lives on the tracer
-   segments (they spin in fast, then settle), see .arc--trace. */
-.arcs--left { left: 0; }
-.arcs--right { right: 0; }
-
-/* On phones keep each arc group small and firmly in its own corner, with a
-   wide open gap down the centre — no crossing, no crosshatch. */
-@media (max-width: 640px) {
-  .arcs { width: 40vw; }
-}
-
-.arc {
-  fill: none;
-  stroke: var(--ink);
-  vector-effect: non-scaling-stroke;
-}
-
-/* Plain SOLID stroke — no dash math. This guarantees the whole arc is drawn
-   edge-to-edge; the earlier dasharray/dashoffset draw-on combined with
-   pathLength + non-scaling-stroke miscomputed the dash and dropped the last
-   ~20deg at the vertical edge. The draw-on now lives on the .arcs clip-path. */
-.arc--base {
-  stroke-opacity: 0.2;
-  stroke-width: 1.4;
-}
-
-.arc--trace {
-  stroke-opacity: 0.42;
-  stroke-width: 3.15;
-  stroke-linecap: round;
-  stroke-dasharray: 17 83;
-  stroke-dashoffset: var(--phase, 0);
-  opacity: 0;
-  /* Each segment fades in and sweeps in fast — LESS than one loop, in the
-     SAME direction as the steady loop — then decelerates straight into it.
-     Under a full loop, the dash never wraps during the fast phase, so the
-     quick motion can't strobe/alias into looking like it spins the other way.
-     Staggered per --delay. */
-  animation:
-    traceSpin 1.3s cubic-bezier(0.1, 0.7, 0.35, 0.92) var(--delay, 0s) both,
-    trace var(--dur, 9s) linear calc(var(--delay, 0s) + 1.3s) infinite,
-    traceIn 0.35s ease-out var(--delay, 0s) forwards;
-}
-
-/* Each segment starts at its own --phase, sweeps 0.75 of a loop (no wrap),
-   then the steady loop continues seamlessly (one full loop) from there. The
-   per-arc --phase means they settle at different points around the circle,
-   not clustered at the same progress. */
-@keyframes traceSpin { to { stroke-dashoffset: calc(var(--phase, 0) - 75); } }
-@keyframes trace {
-  from { stroke-dashoffset: calc(var(--phase, 0) - 75); }
-  to { stroke-dashoffset: calc(var(--phase, 0) - 175); }
-}
-@keyframes traceIn { from { opacity: 0; } to { opacity: 1; } }
-
 /* ---------- Layout ---------- */
 .page {
   position: relative;
@@ -169,16 +100,6 @@ body::after {
   color: var(--ink);
 }
 
-.label--link {
-  background: none;
-  border: 0;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: opacity 0.25s ease;
-}
-
-.label--link:hover { opacity: 0.6; }
-
 /* ---------- Hero stage: square photo + two-tone QUARTER ---------- */
 /* Layout: THE (small caps, above) · the square photo slot with QUARTER
    straddling it · ATHLETIC CLUB (small caps, below). The square and the base
@@ -201,10 +122,11 @@ body::after {
      tracking = 3.876. Keep letter-spacing in em (below) so the ratio is
      scale-invariant. --wm-shift re-centres UARTE in the square, since Q is a
      wider glyph than the trailing R. */
-  /* min(32vw, 40vh) so the square (and the derived QUARTER size) shrink on short
-     desktop viewports and the CTA/footer never get pushed off — the page is a
-     fixed single screen (body overflow:hidden), so it must fit, not scroll. */
-  --img: clamp(180px, min(32vw, 40vh), 420px);
+  /* min(42vw, 48vh) so the square (and the derived QUARTER size) fill the screen
+     yet still shrink on short viewports so the CTA/footer never get pushed off —
+     the page is a fixed single screen (body overflow:hidden), so it must fit,
+     not scroll. */
+  --img: clamp(200px, min(42vw, 48vh), 500px);
   --uarte: 3.876;
   --wm-shift: -0.0675em;
 }
@@ -214,7 +136,7 @@ body::after {
 .wordmark-club {
   font-family: var(--caps);
   font-weight: 500;
-  font-size: clamp(0.85rem, 1.8vw, 1.45rem);
+  font-size: clamp(0.72rem, 1.45vw, 1.18rem);
   letter-spacing: 0.4em;
   text-transform: uppercase;
   color: var(--ink);
@@ -316,20 +238,6 @@ body::after {
   z-index: 3;
   color: var(--paper);
   pointer-events: none;
-}
-
-.status {
-  font-family: var(--caps);
-  font-weight: 500;
-  font-size: clamp(0.6rem, 0.78vw, 0.72rem);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  text-indent: 0.28em;
-  color: var(--ink);
-  border: 1px solid rgba(18, 25, 10, 0.55);
-  border-radius: 999px;
-  padding: 0.72em 1.5em;
-  margin-top: clamp(16px, 3.2vh, 40px);
 }
 
 .tagline {
@@ -555,7 +463,6 @@ body::after {
 /* Keyboard focus rings (buttons) */
 .modal .cta:focus-visible,
 .modal__close:focus-visible,
-.label--link:focus-visible,
 .cta:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
@@ -589,7 +496,6 @@ body::after {
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .arc--trace { display: none; }
   .cta { transition: none; }
   .modal__scrim,
   .modal__dialog { animation: none; }
